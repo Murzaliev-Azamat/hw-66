@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import axiosApi from "../../axiosApi";
 import {useNavigate} from "react-router-dom";
-import Spinner from "../../components/Spinner/Spinner";
 import {SendingMeal} from "../../types";
 import Form from "../../components/Form/Form";
 
@@ -20,21 +19,11 @@ const Add = () => {
     }
   };
 
-  let info = (
+  return (
     <div>
       <h4 className="mt-2 mb-2">Add new meal</h4>
-      <Form onSubmit={addMeal}/>
+      <Form onSubmit={addMeal} isLoading={loading}/>
     </div>
-  );
-
-  if (loading) {
-    info = <Spinner/>
-  }
-
-  return (
-    <>
-      {info}
-    </>
   );
 };
 

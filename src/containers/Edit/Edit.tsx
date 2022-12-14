@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axiosApi from "../../axiosApi";
 import {Meal, SendingMeal} from "../../types";
-import Spinner from "../../components/Spinner/Spinner";
 import Form from "../../components/Form/Form";
 
 const Edit = () => {
@@ -37,23 +36,15 @@ const Edit = () => {
     }
   };
 
-  let info = (
-    <div>
-      {meal && (
-        <>
-        <h4 className="mt-2 mb-2">Edit meal</h4>
-        <Form existingMeal={meal} onSubmit={updateMeal}/>
-        </>)}
-    </div>
-  );
-
-  if (loading) {
-    info = <Spinner/>
-  }
-
   return (
     <>
-      {info}
+      <div>
+        {meal && (
+          <>
+            <h4 className="mt-2 mb-2">Edit meal</h4>
+            <Form existingMeal={meal} onSubmit={updateMeal} isLoading={loading}/>
+          </>)}
+      </div>
     </>
   );
 };

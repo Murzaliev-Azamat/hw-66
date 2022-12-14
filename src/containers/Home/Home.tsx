@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Post from "../../components/Post/Post";
 import {Link} from "react-router-dom";
-import {Meal, MealList} from "../../types";
+import {Meal, MealApiList} from "../../types";
 import axiosApi from "../../axiosApi";
 import Spinner from "../../components/Spinner/Spinner";
 
@@ -12,7 +12,9 @@ const Home = () => {
   const fetchMeals = useCallback(async () => {
     try {
       setLoading(true);
-      const mealsResponse = await axiosApi.get<MealList | null>('/meals.json');
+      const mealsResponse = await axiosApi.get<MealApiList | null>('/meals.json');
+
+
       const meals = mealsResponse.data;
       if (!meals) {
         return setMeals([]);
@@ -20,7 +22,10 @@ const Home = () => {
       const newMeals = Object.keys(meals).map(key => {
         const meal = meals[key];
         meal.id = key;
-        return meal;
+        return {
+          ...meal,
+          calories: parseInt(meal.calories),
+        }
       });
       setMeals(newMeals);
     } finally {
@@ -31,6 +36,15 @@ const Home = () => {
   useEffect(() => {
     void fetchMeals();
   }, [fetchMeals]);
+
+  const getTotalCalories = () => {
+    if (!meals) {
+      return 0;
+    }
+    return meals.reduce((acc, meal) => {
+      return acc + meal.calories
+    }, 0);
+  }
 
   const remove = async (id: string) => {
     try {
@@ -45,8 +59,8 @@ const Home = () => {
   let list = meals && (
     <div>
       <div className="d-flex align-items-center justify-content-between mt-3 mb-3">
-        <h4 className="m-0">Total calories: 900</h4>
-        <Link to={"/add-meal"}>Add new meal</Link>
+        <h4 className="m-0">Total calories: {getTotalCalories()}</h4>
+        <Link to={"/add-meal"} className="btn btn-success">Add new meal</Link>
       </div>
       {meals.map((meal) => (
         <Post onDelete={remove} key={meal.id} timeMeal={meal.timeMeal} food={meal.food} calories={meal.calories} id={meal.id}/>

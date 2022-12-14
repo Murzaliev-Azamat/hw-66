@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 interface Props {
   timeMeal: string;
   food: string;
-  calories: string;
+  calories: number;
   id: string;
   onDelete: (id: string) => void;
 }
